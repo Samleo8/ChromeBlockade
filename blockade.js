@@ -32,8 +32,8 @@ var functions_activated = true;
 var button_activated = true;
 
 //Retrieve options on document DOM Content Load
-document.addEventListener("DOMContentLoaded", retrieveOptions);
-setTimeout(retrieveOptions,1000); //Failsafe in case
+document.addEventListener("DOMContentLoaded", retrieveOptions, false);
+setTimeout(retrieveOptions, 1000); //Failsafe in case
 
 function retrieveOptions(){
     //console.log("Retrieving Options...");

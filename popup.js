@@ -1,4 +1,4 @@
-var activateButton, activateNotif, saveNotif;
+var activateButton, fireAgainButton, activateNotif, saveNotif;
 var notif_t = {};
 var notifTimeout = 1000; //ms
 var urlz;
@@ -44,6 +44,7 @@ retrieveOptions();
 function init(){
     //RETRIEVE ELEMENTS
     activateButton = document.getElementById('ToggleActivateBtn');
+    fireAgainButton = document.getElementById('FireAgainBtn');
     activateNotif = document.getElementById("activateNotif");
     saveNotif = document.getElementById("save_notif");
 
@@ -91,6 +92,15 @@ function init(){
         saveOptions();
     }, false);
 
+    //FIRE AGAIN BUTTON EVENT LISTENERS
+    fireAgainButton.addEventListener('click', function() {
+        chrome.tabs.query({active: true,currentWindow:true}, function(tabs){
+            window.beginBlockade();
+            
+            console.log("Blockade fired again!");
+        });    
+    }, false);
+    
 	chrome.tabs.query({active: true,currentWindow:true}, function(tabs){
 		var urlz = tabs[0]["url"];		
 		var blockade = window.blockade;
