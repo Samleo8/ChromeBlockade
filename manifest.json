@@ -3,7 +3,7 @@
 	
 	"name": "Blockade!",
 	"description": "This extension helps blockades specific distractions on specific sites like Facebook",
-	"version": "3.2",
+	"version": "3.3",
 	
 	
 	"options_page": "options.html",

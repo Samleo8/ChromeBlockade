@@ -32,7 +32,7 @@ var functions_activated = true;
 var button_activated = true;
 
 //Retrieve options on document DOM Content Load
-document.addEventListener("DOMContentLoaded", retrieveOptions, false);
+window.addEventListener("DOMContentLoaded", retrieveOptions, false);
 setTimeout(retrieveOptions, 1000); //Failsafe in case
 
 function retrieveOptions(){
@@ -81,7 +81,6 @@ function saveOptions() {
  * remove: Totally Removes Element. User doesn't even stand a chance.
 */
 
-//*
 function beginBlockade(){
 	for(var i in blockade){
 		if(!blockade.hasOwnProperty(i)) continue; 
@@ -115,4 +114,15 @@ function beginBlockade(){
 		}
 	}
 }
-//*/
+
+/* READING MESSAGES FROM POPUP
+ * 
+*/
+
+chrome.runtime.onMessage.addListener(function (msg, sender, response) {
+  // First, validate the message's structure
+  if ((msg.from === 'popup') && (msg.subject === 'BeginBlockade')) {
+    beginBlockade();
+    console.log("Blockade Re-run!");
+  }
+});
