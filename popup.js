@@ -98,7 +98,7 @@ function init(){
             chrome.tabs.sendMessage(
                 tabs[0].id,
                 {from: 'popup', subject: 'BeginBlockade'},
-                function(){}}
+                function(){}
             );
         });
     }, false);
