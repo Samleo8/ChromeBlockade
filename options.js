@@ -1,9 +1,9 @@
-var activateButton, activateNotif, saveNotif, errorNotif;
+var activateButton, activateNotif, saveNotif, errorNotif, popupDeactivateCheckbox;
 var notif_t = {};
 var notifTimeout = 1000; //ms
 
-var functions_activated=true;
-
+var functions_activated = true;
+var button_activated = true;
 
 /* BLOCKADE FUNCTIONS:
  * BLOCKADE: Total Blockade of Page
@@ -55,10 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function init(){
     //RETRIEVE ELEMENTS
     activateButton = document.getElementById('ToggleActivateBtn');
+    popupDeactivateCheckbox = document.getElementById("disablePopupBtnCheckbox");
     activateNotif = document.getElementById("activateButtonHolder").getElementsByTagName("span")[0];
     saveNotif = document.getElementById("save_notif");
     errorNotif = document.getElementById("error_notif");
-
+    
     notif_t[activateNotif] = null;
     notif_t[saveNotif] = null;
 	notif_t[errorNotif] = null;
@@ -71,7 +72,7 @@ function init(){
     else{
         activateButton.className = activateButton.className.replaceAll(" deactivate"," activate");
         activateButton.innerHTML = "ACTIVATE";
-    }	
+    }
 	
 	//ACTIVATE BUTTON EVENT LISTENERS
     activateButton.addEventListener('click', function() {
@@ -93,6 +94,16 @@ function init(){
         saveOptions();
     }, false);
 		
+    //INIT POPUP DEACTIVATION CHECKBOX
+    popupDeactivateCheckbox.checked = !button_activated;
+    
+    //CHECKBOX EVENT LISTENERS
+    popupDeactivateCheckbox.addEventListener('change', function() {
+        button_activated = !popupDeactivateCheckbox.checked;
+        
+        saveOptions();
+    }, false);
+    
 	//DISPLAY CURRENT TARGETS
 	displayCurrentTargets();
 	
@@ -335,15 +346,23 @@ function displayNotif(notif_obj, msg, time_out){
 }
 
 function retrieveOptions(){
-    chrome.storage.sync.get(["functions_activated","blockade_obj"],function(items){
+    chrome.storage.sync.get(["functions_activated","button_activated","blockade_obj"],function(items){
 		if(items["blockade_obj"]==null || items["blockade_obj"]=="{}"){
 			blockade = blockade_default;
-			functions_activated = true;		
+			functions_activated = true;
+            button_activated = true;
+            
 			init(); saveOptions();
 		}
 		else{
 			blockade = JSON.parse(items["blockade_obj"]);
-			functions_activated = items["functions_activated"];
+			
+            if(functions_activated!=null) functions_activated = items["functions_activated"];
+            else functions_activated = true;
+            
+            if(button_activated!=null) button_activated = items["button_activated"];
+            else button_activated = true;
+            
 			init();
 		}
 	});
@@ -352,10 +371,10 @@ function retrieveOptions(){
 function saveOptions() {
     chrome.storage.sync.set({
         functions_activated: functions_activated,
+        button_activated: button_activated,
         blockade_obj: JSON.stringify(blockade)
     },function(){		
-        displayNotif(saveNotif);
-        console.log("Settings Saved.");
+        console.log("Options saved.");
     });
 }
 

@@ -4,6 +4,7 @@ var notifTimeout = 1000; //ms
 var urlz;
 
 var functions_activated=true;
+var button_activated=true;
 var blockade={};
 //*
 var blockade_default = {
@@ -53,6 +54,12 @@ function init(){
     if(functions_activated){
         activateButton.className = activateButton.className.replaceAll(" activate"," deactivate");
         activateButton.innerHTML = "DEACTIVATE";
+        
+        //IF POPUP BUTTON HAS BEEN DISABLED
+        if(!button_activated){
+            activateButton.className += " disabled";
+            activateButton.disabled = true;
+        }
     }
     else{
         activateButton.className = activateButton.className.replaceAll(" deactivate"," activate");
@@ -61,7 +68,7 @@ function init(){
 	
 	//ACTIVATE BUTTON EVENT LISTENERS
     activateButton.addEventListener('click', function() {
-        if(activateButton.className.indexOf(" deactivate")!=-1){
+        if(activateButton.className.indexOf(" deactivate")!=-1 && button_activated){
             activateButton.className = activateButton.className.replaceAll(" deactivate"," activate");
             activateButton.innerHTML = "ACTIVATE";
             functions_activated = false;
@@ -73,6 +80,11 @@ function init(){
             activateButton.innerHTML = "DEACTIVATE";
             functions_activated = true;
             
+            if(!button_activated){
+                activateButton.className += " disabled";
+                activateButton.disabled = true;
+            }
+            
             displayNotif(activateNotif,"Activated!",600);
         }
         
@@ -82,8 +94,9 @@ function init(){
 	chrome.tabs.query({active: true,currentWindow:true}, function(tabs){
 		var urlz = tabs[0]["url"];		
 		var blockade = window.blockade;
-		console.log(blockade);
-		//CHECK IF SITE IS ON HITLIST
+		//console.log(blockade);
+		
+        //CHECK IF SITE IS ON HITLIST
 		if(urlz!=null && blockade!=null) for(var i in blockade){
 			if(!blockade.hasOwnProperty(i)) continue; 
 					
@@ -110,17 +123,25 @@ function displayNotif(notif_obj, msg, time_out){
 }
 
 function retrieveOptions(){
-    chrome.storage.sync.get(["functions_activated","blockade_obj"],function(items){
+    chrome.storage.sync.get(["functions_activated","button_activated","blockade_obj"],function(items){
 		if(items["blockade_obj"]!=null) {
 			blockade = JSON.parse(items["blockade_obj"]);
-			functions_activated = items["functions_activated"];
+			
+            if(functions_activated!=null) functions_activated = items["functions_activated"];
+            else functions_activated = true;
+            
+            if(button_activated!=null) button_activated = items["button_activated"];
+            else button_activated = true;
 			
 			init();
 		}
 		else{
 			blockade = blockade_default;
 			functions_activated = true;
-			init(); saveOptions();
+            button_activated = true;
+            
+			init();
+            saveOptions();
 		}
 		
 	});
@@ -129,9 +150,10 @@ function retrieveOptions(){
 function saveOptions() {
     chrome.storage.sync.set({
         functions_activated: functions_activated,
+        button_activated: button_activated,
         blockade_obj: JSON.stringify(blockade)
     },function(){		
-        console.log("Settings Saved.");
+        console.log("Options saved.");
     });
 }
 

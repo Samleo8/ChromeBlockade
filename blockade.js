@@ -29,21 +29,31 @@ var blockade_default = {
 }; 
 
 var functions_activated = true;
+var button_activated = true;
 
-retrieveOptions();
+//Retrieve options on document DOM Content Load
+document.addEventListener("DOMContentLoaded", retrieveOptions);
+setTimeout(retrieveOptions,1000); //Failsafe in case
 
 function retrieveOptions(){
-    chrome.storage.sync.get(["functions_activated","blockade_obj"],function(items){
+    //console.log("Retrieving Options...");
+    chrome.storage.sync.get(["functions_activated","button_activated","blockade_obj"],function(items){
 		if(items["blockade_obj"]==null || items["blockade_obj"]=="{}"){
 			blockade = blockade_default;
-			functions_activated = true;		
+			functions_activated = true;
+            button_activated = true;
 			beginBlockade();
 			console.log("Default blockade loaded!");
 			saveOptions();	
 		}
 		else{
 			blockade = JSON.parse(items["blockade_obj"]);
-			functions_activated = items["functions_activated"];
+			
+            if(functions_activated!=null) functions_activated = items["functions_activated"];
+            else functions_activated = true;
+            
+            if(button_activated!=null) button_activated = items["button_activated"];
+            else button_activated = true;
 		}
 		
 		if(functions_activated){
@@ -57,9 +67,10 @@ function retrieveOptions(){
 function saveOptions() {
     chrome.storage.sync.set({
         functions_activated: functions_activated,
+        button_activated: button_activated,
         blockade_obj: JSON.stringify(blockade)
     },function(){		
-        console.log("Default loaded and saved.");
+        console.log("Options saved.");
     });
 }
 
