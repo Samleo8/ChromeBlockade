@@ -119,10 +119,11 @@ function beginBlockade(){
  * 
 */
 
-chrome.runtime.onMessage.addListener(function (msg, sender, response) {
-  // First, validate the message's structure
-  if ((msg.from === 'popup') && (msg.subject === 'BeginBlockade')) {
-    beginBlockade();
-    console.log("Blockade Re-run!");
-  }
+chrome.runtime.onMessage.addListener(function (msg, sender) {
+    //console.log("message...");
+    
+    if ((msg.from === 'popup') && (msg.subject === 'BeginBlockade')) {
+        beginBlockade();
+        console.log("Blockade Re-run!");
+    }
 });
