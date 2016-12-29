@@ -4,12 +4,13 @@ var notifTimeout = 1000; //ms
 
 var functions_activated = true;
 var button_activated = true;
+var hardblock = false;
 
 /* BLOCKADE FUNCTIONS:
  * BLOCKADE: Total Blockade of Page
  * hide: Hides Element from User & Makes it Inaccessible 
  * hide_opacity: Hides Element from User, but still clickable
- * remove: Totally Removes Element. User doesn't even stand a chance.
+ * remove: Totally Removes Element. User doesn't stand a chance.
 */
 var blockade_functions = ["remove","hide","hide_opacity"];
 var blockade={};
@@ -39,8 +40,11 @@ var blockade_default = {
 		"#stream_pagelet":{
 			"name":"Facebook News Feed",
 			"function":"remove"		
-		}
-	}
+		},
+        "*[data-click='bluebar_logo']":{
+            "name":"Fb Button 2",
+            "function":"remove"
+        }
 }; 
 //*/
 
@@ -49,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     retrieveOptions();
 	
 	//INITIATION STARTS ONCE OPTIONS ARE RETRIVED.
-	    
 }, false);
 
 function init(){
@@ -120,6 +123,14 @@ function init(){
 	modalBoxCancel.addEventListener('click', function() {
 		toggleAppearance(this.parentNode.parentNode.parentNode);
 	}, false);
+	
+	//Hardblock (ie prevent deactivation completely)
+	if(hardblock){
+		x = document.getElementById("activateButtonHolder");
+		x.parentNode.removeChild(x);
+		
+		if(button_activated){button_activated = false; saveOptions(); }
+	}
 }
 
 function confirmAddToHitlist(type,modalBox){
@@ -242,7 +253,7 @@ function displayCurrentTargets(){
             out+="<tr data-site-name='"+i+"' data-selector='"+j+"'>";
             
             out+="<td>"+blockade[i][j]["name"]+"</td>";
-			out+="<td>"+j.toString()+"</td>";
+			out+="<td class='enableSelect'>"+j.toString()+"</td>";
             out+="<td>"
             var fn = blockade[i][j]["function"];
             if(typeof fn === "function") out+="<i>Custom</i>";

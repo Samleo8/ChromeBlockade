@@ -24,8 +24,11 @@ var blockade_default = {
 		"#stream_pagelet":{
 			"name":"Facebook News Feed",
 			"function":"remove"		
-		}
-	}
+		},
+        "*[data-click='bluebar_logo']":{
+            "name":"Fb Button 2",
+            "function":"remove"
+        }
 }; 
 
 var functions_activated = true;
