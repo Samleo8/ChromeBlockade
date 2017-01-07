@@ -32,10 +32,13 @@ var blockade_default = {
 		"#stream_pagelet":{
 			"name":"Facebook News Feed",
 			"function":"remove"		
-		}
-	},
-	"armorgames.com":"BLOCKADE"
-}; 
+		},
+        "*[data-click='bluebar_logo']":{
+            "name":"Fb Button 2",
+            "function":"remove"
+        }
+    }
+};
 //*/
 
 //RETRIEVE DATA

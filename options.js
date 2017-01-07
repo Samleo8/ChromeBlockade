@@ -45,6 +45,7 @@ var blockade_default = {
             "name":"Fb Button 2",
             "function":"remove"
         }
+    }
 }; 
 //*/
 
