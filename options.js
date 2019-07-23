@@ -127,7 +127,7 @@ function init(){
 	
 	//Hardblock (ie prevent deactivation completely)
 	if(hardblock){
-		x = document.getElementById("activateButtonHolder");
+		var x = document.getElementById("activateButtonHolder");
 		x.parentNode.removeChild(x);
 		
 		if(button_activated){button_activated = false; saveOptions(); }
@@ -255,7 +255,7 @@ function displayCurrentTargets(){
             
             out+="<td>"+blockade[i][j]["name"]+"</td>";
 			out+="<td class='enableSelect'>"+j.toString()+"</td>";
-            out+="<td>"
+            out+="<td>";
             var fn = blockade[i][j]["function"];
             if(typeof fn === "function") out+="<i>Custom</i>";
             else if(typeof fn == "string"){
